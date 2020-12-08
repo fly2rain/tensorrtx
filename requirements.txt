@@ -1,0 +1,5 @@
+Flask
+requests
+numpy
+opencv-python==3.4.5.*
+flask-cors

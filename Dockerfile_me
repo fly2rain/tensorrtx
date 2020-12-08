@@ -4,13 +4,12 @@ ARG BASE_IMAGE=nvcr.io/nvidia/tensorrt:20.03-py3
 
 FROM ${BASE_IMAGE}
 
-RUN apt-get update -y && \
-    apt-get install -y software-properties-common ca-certificates curl nano
-#    add-apt-repository -y ppa:timsc/opencv-3.3 && \
-
-#RUN add-apt-repository ppa:timsc/opencv-3.3 &&  apt-get update
-#RUN apt-get install -y -s libopencv-dev
-# apt-get install libopencv-dev
+RUN apt-get update && \
+    apt-get install -y software-properties-common \
+                        ca-certificates curl nano && \
+    add-apt-repository -y ppa:timsc/opencv-3.3 && \
+    apt-get update && \
+    apt-get install -y libopencv-dev -s
 
 # Set the Working Directory to /app
 RUN  mkdir -p  /app

@@ -5,12 +5,12 @@
 #include "common.hpp"
 
 #define USE_FP16  // comment out this if want to use FP32
-#define DEVICE 0  // GPU id
-#define NMS_THRESH 0.4
-#define CONF_THRESH 0.5
+#define DEVICE 0 // GPU id
+#define NMS_THRESH 0.3
+#define CONF_THRESH 0.3
 #define BATCH_SIZE 1
 
-#define NET s  // s m l x
+#define NET s // s m l x
 #define NETSTRUCT(str) createEngine_##str
 #define CREATENET(net) NETSTRUCT(net)
 #define STR1(x) #x

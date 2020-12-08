@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="fyzhu@10.0.0.16:22 agent" remoteFilesAllowedToDisappearOnAutoupload="false" showAutoUploadSettingsWarning="false">
+    <serverData>
+      <paths name="fyzhu@10.0.0.16:22">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/media/fyzhu/data2T_0/pycharm/tensorrtx" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="fyzhu@10.0.0.16:22 agent">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/media/fyzhu/data2T_0/pycharm/tensorrtx" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="fyzhu@10.165.170.141:22">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/media/fyzhu/pycharm_backup/tensorrtx" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="fyzhu@10.165.170.141:22 agent">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/media/fyzhu/pycharm_backup/tensorrtx" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="fyzhu@10.165.170.141:22 agent (1)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/media/fyzhu/pycharm_backup/tensorrtx" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>
