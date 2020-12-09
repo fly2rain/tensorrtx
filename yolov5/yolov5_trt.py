@@ -12,14 +12,14 @@ import cv2
 import numpy as np
 import pycuda.autoinit
 import pycuda.driver as cuda
-import tensorrt as trt
 import torch
 import torchvision
+import tensorrt as trt
 
-INPUT_W = 608
-INPUT_H = 608
-CONF_THRESH = 0.1
-IOU_THRESHOLD = 0.4
+INPUT_W = 480
+INPUT_H = 480
+CONF_THRESH = 0.3
+IOU_THRESHOLD = 0.3
 
 
 def plot_one_box(x, img, color=None, label=None, line_thickness=None):
@@ -37,7 +37,7 @@ def plot_one_box(x, img, color=None, label=None, line_thickness=None):
 
     """
     tl = (
-        line_thickness or round(0.002 * (img.shape[0] + img.shape[1]) / 2) + 1
+            line_thickness or round(0.002 * (img.shape[0] + img.shape[1]) / 2) + 1
     )  # line/font thickness
     color = color or [random.randint(0, 255) for _ in range(3)]
     c1, c2 = (int(x[0]), int(x[1])), (int(x[2]), int(x[3]))
@@ -63,7 +63,6 @@ class YoLov5TRT(object):
     """
     description: A YOLOv5 class that warps TensorRT ops, preprocess and postprocess ops.
     """
-
     def __init__(self, engine_file_path):
         # Create a Context on this device,
         self.cfx = cuda.Device(0).make_context()
@@ -155,7 +154,7 @@ class YoLov5TRT(object):
             )
         parent, filename = os.path.split(input_image_path)
         save_name = os.path.join(parent, "output_" + filename)
-        # 　Save image
+        # Save image
         cv2.imwrite(save_name, image_raw)
 
     def destroy(self):
@@ -295,27 +294,56 @@ if __name__ == "__main__":
 
     # load coco labels
 
-    categories = ["person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat", "traffic light",
-            "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat", "dog", "horse", "sheep", "cow",
-            "elephant", "bear", "zebra", "giraffe", "backpack", "umbrella", "handbag", "tie", "suitcase", "frisbee",
-            "skis", "snowboard", "sports ball", "kite", "baseball bat", "baseball glove", "skateboard", "surfboard",
-            "tennis racket", "bottle", "wine glass", "cup", "fork", "knife", "spoon", "bowl", "banana", "apple",
-            "sandwich", "orange", "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", "chair", "couch",
-            "potted plant", "bed", "dining table", "toilet", "tv", "laptop", "mouse", "remote", "keyboard", "cell phone",
-            "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors", "teddy bear",
-            "hair drier", "toothbrush"]
+    # categories = ["person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat",
+    #               "traffic light",
+    #               "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat", "dog", "horse", "sheep", "cow",
+    #               "elephant", "bear", "zebra", "giraffe", "backpack", "umbrella", "handbag", "tie", "suitcase",
+    #               "frisbee",
+    #               "skis", "snowboard", "sports ball", "kite", "baseball bat", "baseball glove", "skateboard",
+    #               "surfboard",
+    #               "tennis racket", "bottle", "wine glass", "cup", "fork", "knife", "spoon", "bowl", "banana", "apple",
+    #               "sandwich", "orange", "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", "chair", "couch",
+    #               "potted plant", "bed", "dining table", "toilet", "tv", "laptop", "mouse", "remote", "keyboard",
+    #               "cell phone",
+    #               "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors",
+    #               "teddy bear",
+    #               "hair drier", "toothbrush"]
+    categories = ['mm_towels', 'tide', 'pepsi', 'pom', 'diet_coke', 'sprite', 'gatorade', 'premier_protein', 'cocacola',
+                  'bathtissue', 'monster', 'bounty', 'mtn_dew', 'mm_purifiedwater', 'drpepper', 'power_flex',
+                  'quited_northern', 'caprisun', 'snickers', 'redbull', 'redbull_variety', 'aquafina', 'dasani', 'facial_tissue', 'squirt',
+                  'downy', 'gain', 'canada_dry', 'cascade', 'charmin', 'cheezit', 'clorox', 'cottonelle', 'crush', 'dole',
+                  'doritos', 'glad', 'goldfish', 'hefty', 'kleenex', 'lacroix', 'lays', 'lipton', 'mccafe', 'nestle_pure_life',
+                  'ocean_spray', 'oreo', 'ozarka', 'perrier', 'powerade', 'pringles', 'reeses', 'ritz_bits', 'scott', 'smartwater',
+                  'spellecrino', 'starbucks', 'sunkist', 't_shirt', 'tropicana', 'twix', 'vatmin_water', 'welchs', 'ziploc']
 
     # a  YoLov5TRT instance
     yolov5_wrapper = YoLov5TRT(engine_file_path)
 
     # from https://github.com/ultralytics/yolov5/tree/master/inference/images
-    input_image_paths = ["zidane.jpg", "bus.jpg"]
+    # input_image_paths = ["testing_imgs/00491ede-2908-11eb-8f67-0242ac1006021.jpg",
+    #                      "testing_imgs/4d1c17cc-29c4-11eb-b676-0242ac1006025.jpg"]
+    image_paths = "/app/yolov5/testing_imgs"
+    input_image_paths = os.listdir(image_paths)
+    input_image_paths = [os.path.join(image_paths, x) for x in input_image_paths]
+    print(input_image_paths)
 
+    t1 = time.time()
     for input_image_path in input_image_paths:
         # create a new thread to do inference
+        print(f"processing: {input_image_path}")
         thread1 = myThread(yolov5_wrapper.infer, [input_image_path])
         thread1.start()
         thread1.join()
+    time_spent = time.time() - t1
+    num_img = len(input_image_paths)
+    print(f"FPS: {1 / (time_spent / num_img)}")
+
+    # testing the images
+    t1 = time.time()
+    myThread(yolov5_wrapper.infer, input_image_paths)
+    time_spent = time.time() - t1
+    num_img = len(input_image_paths)
+    print(f"FPS: {1/(time_spent/num_img)}")
 
     # destroy the instance
     yolov5_wrapper.destroy()
